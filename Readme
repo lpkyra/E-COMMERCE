@@ -1,0 +1,35 @@
+E-commerce
+
+Este projeto é uma aplicação de E-commerce que permite a compra e venda de produtos de forma eficiente e segura. O sistema foi desenvolvido com foco em escalabilidade, segurança e experiência do usuário.
+
+Funcionalidades
+
+Cadastro de Clientes:
+
+Suporte a contas Pessoa Física (PF) e Pessoa Jurídica (PJ).
+
+Uma conta pode ser PF ou PJ, mas não pode conter ambas as informações.
+
+Gerenciamento de Pagamentos:
+
+Suporte a múltiplas formas de pagamento cadastradas por usuário.
+
+Processamento seguro de transações.
+
+Gestão de Pedidos:
+
+Status detalhado do pedido (Ex: Processando, Enviado, Entregue).
+
+Código de rastreio para acompanhamento da entrega.
+
+Catálogo de Produtos:
+
+Exibição detalhada dos produtos com imagens e descrições.
+
+Sistema de busca e filtragem para melhor navegação.
+
+Carrinho de Compras:
+
+Adição e remoção de itens.
+
+Cálculo automático de valores e frete.
