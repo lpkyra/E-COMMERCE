@@ -1,0 +1,72 @@
+Criação do Banco de Dados - Script SQL
+
+-- Criação da tabela de Cliente
+CREATE TABLE Cliente (
+    cliente_id INT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    tipo_cliente ENUM('PF', 'PJ') NOT NULL,
+    cpf_cnpj VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    telefone VARCHAR(20)
+);
+
+-- Criação da tabela de Fornecedor
+CREATE TABLE Fornecedor (
+    fornecedor_id INT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(20) UNIQUE NOT NULL
+);
+
+-- Criação da tabela de Produto
+CREATE TABLE Produto (
+    produto_id INT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10, 2) NOT NULL,
+    fornecedor_id INT,
+    estoque INT NOT NULL,
+    FOREIGN KEY (fornecedor_id) REFERENCES Fornecedor(fornecedor_id)
+);
+
+-- Criação da tabela de Pedido
+CREATE TABLE Pedido (
+    pedido_id INT PRIMARY KEY,
+    cliente_id INT,
+    data_pedido DATE NOT NULL,
+    status ENUM('Pendente', 'Concluído', 'Cancelado') NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(cliente_id)
+);
+
+-- Criação da tabela de Pagamento
+CREATE TABLE Pagamento (
+    pagamento_id INT PRIMARY KEY,
+    pedido_id INT,
+    forma_pagamento ENUM('Cartão', 'Boleto', 'Transferência') NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(pedido_id)
+);
+
+-- Criação da tabela de Entrega
+CREATE TABLE Entrega (
+    entrega_id INT PRIMARY KEY,
+    pedido_id INT,
+    status_entrega ENUM('Pendente', 'Enviado', 'Entregue') NOT NULL,
+    codigo_rastreio VARCHAR(50) UNIQUE,
+    FOREIGN KEY (pedido_id) REFERENCES Pedido(pedido_id)
+);
+
+-- Criação da tabela de Estoque
+CREATE TABLE Estoque (
+    estoque_id INT PRIMARY KEY,
+    produto_id INT,
+    quantidade INT NOT NULL,
+    FOREIGN KEY (produto_id) REFERENCES Produto(produto_id)
+);
+
+-- Criação da tabela de Vendedor (vinculado a fornecedor)
+CREATE TABLE Vendedor (
+    vendedor_id INT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    fornecedor_id INT,
+    FOREIGN KEY (fornecedor_id) REFERENCES Fornecedor(fornecedor_id)
+);
