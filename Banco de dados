@@ -1,0 +1,146 @@
+-- Criação da tabela de Cliente
+CREATE TABLE Cliente (
+    cliente_id INT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(255) UNIQUE
+);
+
+-- Criação da tabela de Veículo
+CREATE TABLE Veiculo (
+    veiculo_id INT PRIMARY KEY,
+    cliente_id INT,
+    modelo VARCHAR(255),
+    ano INT,
+    placa VARCHAR(10) UNIQUE,
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(cliente_id)
+);
+
+-- Criação da tabela de Funcionário
+CREATE TABLE Funcionario (
+    funcionario_id INT PRIMARY KEY,
+    nome VARCHAR(255),
+    cargo VARCHAR(100),
+    telefone VARCHAR(20)
+);
+
+-- Criação da tabela de Serviço
+CREATE TABLE Servico (
+    servico_id INT PRIMARY KEY,
+    descricao TEXT NOT NULL,
+    valor DECIMAL(10, 2),
+    veiculo_id INT,
+    funcionario_id INT,
+    data_inicio DATE,
+    data_fim DATE,
+    FOREIGN KEY (veiculo_id) REFERENCES Veiculo(veiculo_id),
+    FOREIGN KEY (funcionario_id) REFERENCES Funcionario(funcionario_id)
+);
+
+-- Criação da tabela de Orçamento
+CREATE TABLE Orcamento (
+    orcamento_id INT PRIMARY KEY,
+    veiculo_id INT,
+    valor_estimado DECIMAL(10, 2),
+    data DATE,
+    FOREIGN KEY (veiculo_id) REFERENCES Veiculo(veiculo_id)
+);
+
+-- Criação da tabela de Pagamento
+CREATE TABLE Pagamento (
+    pagamento_id INT PRIMARY KEY,
+    orcamento_id INT,
+    forma_pagamento ENUM('Cartão', 'Dinheiro', 'Transferência', 'Cheque'),
+    valor_pago DECIMAL(10, 2),
+    data_pagamento DATE,
+    FOREIGN KEY (orcamento_id) REFERENCES Orcamento(orcamento_id)
+);
+
+-- Criação da tabela de Peças
+CREATE TABLE Peca (
+    peca_id INT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    preco DECIMAL(10, 2)
+);
+
+-- Criação da tabela de Estoque de Peças
+CREATE TABLE EstoquePeca (
+    estoque_id INT PRIMARY KEY,
+    peca_id INT,
+    quantidade INT,
+    FOREIGN KEY (peca_id) REFERENCES Peca(peca_id)
+);
+
+-- Tabela de Relacionamento Serviço - Peça (pois um serviço pode utilizar várias peças)
+CREATE TABLE ServicoPeca (
+    servico_id INT,
+    peca_id INT,
+    quantidade INT,
+    PRIMARY KEY (servico_id, peca_id),
+    FOREIGN KEY (servico_id) REFERENCES Servico(servico_id),
+    FOREIGN KEY (peca_id) REFERENCES Peca(peca_id)
+);
+
+Inserção de Dados de Test
+-- Inserir Clientes
+INSERT INTO Cliente (cliente_id, nome, telefone, email)
+VALUES 
+(1, 'João Silva', '1234-5678', 'joao.silva@example.com'),
+(2, 'Maria Oliveira', '9876-5432', 'maria.oliveira@example.com');
+
+-- Inserir Veículos
+INSERT INTO Veiculo (veiculo_id, cliente_id, modelo, ano, placa)
+VALUES 
+(1, 1, 'Fusca', 1978, 'ABC-1234'),
+(2, 2, 'Civic', 2020, 'XYZ-5678');
+
+-- Inserir Funcionários
+INSERT INTO Funcionario (funcionario_id, nome, cargo, telefone)
+VALUES 
+(1, 'Carlos Almeida', 'Mecânico', '3333-4444'),
+(2, 'Ana Costa', 'Atendente', '5555-6666');
+
+-- Inserir Serviços
+INSERT INTO Servico (servico_id, descricao, valor, veiculo_id, funcionario_id, data_inicio, data_fim)
+VALUES 
+(1, 'Troca de óleo', 100.00, 1, 1, '2025-01-01', '2025-01-02'),
+(2, 'Troca de pastilhas de freio', 250.00, 2, 1, '2025-01-02', '2025-01-03');
+
+-- Inserir Orçamentos
+INSERT INTO Orcamento (orcamento_id, veiculo_id, valor_estimado, data)
+VALUES 
+(1, 1, 150.00, '2025-01-01'),
+(2, 2, 300.00, '2025-01-02');
+
+-- Inserir Pagamentos
+INSERT INTO Pagamento (pagamento_id, orcamento_id, forma_pagamento, valor_pago, data_pagamento)
+VALUES 
+(1, 1, 'Cartão', 150.00, '2025-01-03'),
+(2, 2, 'Dinheiro', 300.00, '2025-01-03');
+
+-- Inserir Peças
+INSERT INTO Peca (peca_id, nome, descricao, preco)
+VALUES 
+(1, 'Óleo de motor', 'Óleo sintético 5W30', 50.00),
+(2, 'Pastilhas de freio', 'Pastilhas para modelo Civic 2020', 150.00);
+
+-- Inserir Estoque de Peças
+INSERT INTO EstoquePeca (estoque_id, peca_id, quantidade)
+VALUES 
+(1, 1, 100),
+(2, 2, 50);
+
+-- Inserir Serviço-Peca
+INSERT INTO ServicoPeca (servico_id, peca_id, quantidade)
+VALUES 
+(1, 1, 1),
+(2, 2, 2);
+
+Queries SQL para Responder às Perguntas
+
+SELECT v.modelo, s.descricao, s.valor, s.data_inicio, s.data_fim
+FROM Servico s
+JOIN Veiculo v ON s.veiculo_id = v.veiculo_id
+WHERE v.cliente_id = 1;
+
